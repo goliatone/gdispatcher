@@ -27,7 +27,11 @@
  */
 namespace goliatone\events\core;
 
+use Exception;
+
 use goliatone\events\core\IDispatcher;
+use goliatone\events\core\CoreEvent;
+use goliatone\events\core\CoreListener;
 
 abstract class CoreDispatcher Implements InterfaceDispatcher
 {
@@ -83,15 +87,15 @@ abstract class CoreDispatcher Implements InterfaceDispatcher
 
         if(empty($listener))
         {
-            throw new Kohana_Exception('You have to provide a listener for type {$type}. None found.');
+            throw new Exception('You have to provide a listener for type {$type}. None found.');
         }
         
-        $this->_listeners[$type][] = new Core_Listener($listener,$type,$priority);
+        $this->_listeners[$type][] = new CoreListener($listener,$type,$priority);
         
         
         //if($priority !== 0) usort($this->_listeners[$type],'Core_Listener::compare');
         //calling this seems to be a bit faster?
-        if($priority !== 0) Core_Listener::sort($this->_listeners[$type]);
+        if($priority !== 0) CoreListener::sort($this->_listeners[$type]);
     }
 
     /**
@@ -104,8 +108,10 @@ abstract class CoreDispatcher Implements InterfaceDispatcher
      * @param  boolean           $allow_stop_propagation If set to true, handlers can stop propagation by  $event->stop_propagation = TRUE
      * @return Dispatcher_Event                   The Event object, after modification
      */
-    final public function dispatch_event( Event $event, $allow_stop_propagation = FALSE)
+    final public function dispatch_event( CoreEvent $event, $allow_stop_propagation = FALSE)
     {
+        print "CoreDispatcher::dispatch_event: {$event}\n";
+        
         if($this->will_trigger($event->type))
         {
             foreach($this->_listeners[$event->type] as $listener)
@@ -117,7 +123,7 @@ abstract class CoreDispatcher Implements InterfaceDispatcher
                     break;
                 }
             }
-        }
+        } else print "CoreDispathcer::dispatch_event will not trigger\n";
         
         return $event;
     }
