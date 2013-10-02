@@ -57,6 +57,7 @@ abstract class CoreEvent
         {
             foreach($arguments as $arg => $val)
             {
+                print "Args: {$arg}";
                 $this->set($arg,$val);
                 $this->_arguments[$arg] = $val;
             } 
@@ -78,7 +79,7 @@ abstract class CoreEvent
         
         if($var[0] === '_')
         {
-            throw new Kohana_Exception('Cannot access protected member variable :var', array(':var' => $var));
+            throw new Exception('Cannot access protected member variable :var', array(':var' => $var));
         }
         
         if(isset($this->$var))
@@ -161,6 +162,7 @@ abstract class CoreEvent
         //$dat = array_diff($this->_data, $this->_arguments);
         foreach($this->_data as $key => $value)
         {
+            // $out .= $spc.$key." => ".$value instanceof Closure ? "closure" : $value ;
             $out .= $spc.$key." => ".$value;
             $spc = ", ";
         } 
