@@ -1,0 +1,60 @@
+{
+    "name": "goliatone/events",
+    "description": "The simple flat file PHP [blog] engine.",
+    "type": "library",
+    "keywords": ["event-dispatcher", "eventdispatcher", "event driven"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "goliatone",
+            "email": "hello@goliatone.com"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "goliatone\\events": "src/"
+        }
+    },
+    "minimum-stability": "dev",
+    "require-dev": {
+        "funkatron/funit": ">=0.3",
+        "dotink/sage":"dev-master"
+    },
+    "repositories": [
+	   {
+	     "type": "git",
+	     "url": "git@github.com:funkatron/FUnit.git"
+	   },
+	   {
+            "type": "package",
+            "package": {
+                "name": "wolfie/php-markdown",
+                "version": "1.2.2",
+                "autoload": {"classmap": ["markdown.php"]},
+                "source": {
+                    "url": "git://github.com/wolfie/php-markdown.git",
+                    "type": "git",
+                    "reference": "extra"
+                }
+            }
+        },
+	    {
+            "type": "package",
+            "package": {
+                "name": "dotink/sage",
+                "version": "master",
+                "autoload": {"classmap": ["src/"]},
+                "source": {
+                    "url": "git://github.com/dotink/sage.git",
+                    "type": "git",
+                    "reference": "master"
+                }
+            }
+        }	   	
+	],
+	"extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
+    }
+}
