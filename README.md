@@ -7,7 +7,7 @@ The usage is straight forward. Enable the module in the bootstrap file and go. T
 
 A simple use case. In your application, prepare a `$body` variable and dispatch an event:
 
-    $event = new Event('render_body', array($this,"handle_render_body");
+    $event = new Event('render_body', array($this,"handle_render_body"));
     $event->bind("body",$body);
     $event->dispatch();
     
