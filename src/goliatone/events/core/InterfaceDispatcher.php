@@ -9,7 +9,7 @@
  */
 namespace goliatone\events\core;
 
-Interface IDispatcher
+Interface InterfaceDispatcher
 {
 
     /**
