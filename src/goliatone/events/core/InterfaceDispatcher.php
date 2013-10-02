@@ -9,6 +9,8 @@
  */
 namespace goliatone\events\core;
 
+use goliatone\events\core\CoreEvent;
+
 Interface InterfaceDispatcher
 {
 
@@ -28,7 +30,7 @@ Interface InterfaceDispatcher
      *
      * @param Dispatcher_Event $event            Event object
      */
-    public function dispatch_event(Event $event);
+    public function dispatch_event(CoreEvent $event);
     
     /**
      * Will return TRUE if there is any registered listener for a given
