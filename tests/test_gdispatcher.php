@@ -2,8 +2,6 @@
 require './vendor/autoload.php';
 require './vendor/funkatron/funit/FUnit.php';
 
-use Exception;
-
 use \FUnit\fu;
 use goliatone\events\Event;
 use goliatone\events\Dispatcher;
@@ -50,9 +48,9 @@ fu::test("CoreEvent: magic setters", function(){
 });
 
 fu::test("CoreEvent: magic getters for type and arguments",function(){
-    $e = new TEvent('event_type', array('a'=>1));    
-    fu::ok(property_exists(TEvent, 'type') === FALSE);
-    fu::ok(property_exists(TEvent, 'arguments') === FALSE);
+    // fu::ok(property_exists(TEvent, 'type') === FALSE);
+    // fu::ok(property_exists(TEvent, 'arguments') === FALSE);
+    $e = new TEvent('event_type', array('a'=>1));  
     fu::ok($e->type);
     fu::ok($e->arguments);
 });
@@ -75,6 +73,23 @@ fu::test("CoreEvent: toString with arguments", function(){
 /////////////////////////////////////////////
 // Dispatcher
 /////////////////////////////////////////////
+fu::test("Dispatcher: Singleton", function(){
+   $handler = function($e) {};
+   $a = Dispatcher::instance();
+   $a->add_listener('render', $handler);
+   $b = Dispatcher::instance();
+   fu::equal($a, $b);
+   fu::strict_equal($a, $b);
+   fu::ok($b->will_trigger('render'));
+   
+   $c = new Dispatcher();
+   fu::not_equal($a, $c);
+   fu::not_strict_equal($a, $c);
+   
+   $d = Dispatcher::factory();
+   fu::not_strict_equal($c, $d);
+});
+
 fu::test("Dispatch event", function() {
     $result = 2;
     $expected;
@@ -87,6 +102,44 @@ fu::test("Dispatch event", function() {
     $event->bind("expected",$expected);
     $event->dispatch();
     fu::equal($result, $expected, "");
+});
+
+fu::test("CoreDispatch::will_trigger", function() {
+   $handler = function($e) {};
+   $a = Dispatcher::instance();
+   $a->add_listener('render', $handler);
+   fu::ok($a->will_trigger('render'));
+   fu::not_equal($a->will_trigger('render'), $a->will_trigger('BULLCRAP'));
+});
+
+fu::test("CoreDispatch::dispatch_event will fire if event is registered.", function(){
+    $result = 2;
+    $expected = 0;
+    $handle = function($e) use (&$expected) { $expected = 2; };
+    $event = new Event('render');
+    Dispatcher::instance()->add_listener('render',$handle);
+    Dispatcher::instance()->dispatch_event($event);
+    fu::equal($result, $expected);
+});
+
+fu::test("CoreDispatch::dispatch_event will fire if event is registered.", function(){
+    $result = 2;
+    $expected = 0;
+    $handle = function($e){ $e->expected = 2; };
+    $event = new Event('render');
+    $event->bind('expected', $expected);
+    Dispatcher::instance()->add_listener('render',$handle);
+    Dispatcher::instance()->dispatch_event($event);
+    fu::equal($result, $expected);
+});
+
+fu::test("CoreDispatch::dispatch_event wont fire if no event is registered.", function(){
+    $result = 2;
+    $expected = 0;
+    $handle = function($e) use ($expected) { $expected = 2; };
+    $e = new Event('render');
+    Dispatcher::instance()->dispatch_event($e);
+    fu::not_equal($result, $expected);
 });
 
 #############################################
