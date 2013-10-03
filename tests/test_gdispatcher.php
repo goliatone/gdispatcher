@@ -34,6 +34,7 @@ fu::test("CoreEvent: constructor with arguments", function(){
    fu::equal($event->age, 32);
    fu::equal($event->name, 'goliatone');
 });
+
 fu::test("CoreEvent: setters", function(){
    // class TEvent extends CoreEvent{};
    $e = new TEvent('event_type');    
@@ -46,6 +47,14 @@ fu::test("CoreEvent: magic setters", function(){
    $e = new TEvent('event_type');    
    $e->magic =  'abracadabra';
    fu::equal($e->magic, 'abracadabra');
+});
+
+fu::test("CoreEvent: magic getters for type and arguments",function(){
+    $e = new TEvent('event_type', array('a'=>1));    
+    fu::ok(property_exists(TEvent, 'type') === FALSE);
+    fu::ok(property_exists(TEvent, 'arguments') === FALSE);
+    fu::ok($e->type);
+    fu::ok($e->arguments);
 });
 /*
 fu::test("CoreEvent: toString with arguments", function(){
