@@ -71,7 +71,7 @@ final class CoreListener {
      * The higher the priority the higher the precedence.
      * @private
      */
-    static public function compare(Core_Listener $a, Core_Listener $b)
+    static public function compare(CoreListener $a, CoreListener $b)
     {
         if(  $a->priority ==  $b->priority ){ return 0 ; } 
         return ($a->priority > $b->priority) ? -1 : 1;
