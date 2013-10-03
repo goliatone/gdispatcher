@@ -137,7 +137,8 @@ abstract class CoreEvent
     
     /**
     * Sets the data variable to a given value.
-    *
+    * TODO: Should we restrict the event type?
+    * 
     * @param string The key.
     * @param mixed  The value.
     * @return Event
