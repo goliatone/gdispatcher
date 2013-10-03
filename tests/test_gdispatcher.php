@@ -2,6 +2,8 @@
 require './vendor/autoload.php';
 require './vendor/funkatron/funit/FUnit.php';
 
+use Exception;
+
 use \FUnit\fu;
 use goliatone\events\Event;
 use goliatone\events\Dispatcher;
@@ -115,7 +117,7 @@ fu::test("CoreDispatch::will_trigger", function() {
 fu::test("CoreDispatch::dispatch_event will fire if event is registered.", function(){
     $result = 2;
     $expected = 0;
-    $handle = function($e) use (&$expected) { $expected = 2; };
+    $handle = function($e) use (&$expected) { $expected += 2; };
     $event = new Event('render');
     Dispatcher::instance()->add_listener('render',$handle);
     Dispatcher::instance()->dispatch_event($event);
@@ -125,7 +127,7 @@ fu::test("CoreDispatch::dispatch_event will fire if event is registered.", funct
 fu::test("CoreDispatch::dispatch_event will fire if event is registered.", function(){
     $result = 2;
     $expected = 0;
-    $handle = function($e){ $e->expected = 2; };
+    $handle = function($e){ $e->expected = 2; /*NOTE this fails: $e->expected = 2;*/ };
     $event = new Event('render');
     $event->bind('expected', $expected);
     Dispatcher::instance()->add_listener('render',$handle);
@@ -136,12 +138,42 @@ fu::test("CoreDispatch::dispatch_event will fire if event is registered.", funct
 fu::test("CoreDispatch::dispatch_event wont fire if no event is registered.", function(){
     $result = 2;
     $expected = 0;
-    $handle = function($e) use ($expected) { $expected = 2; };
+    $handle = function($e) use ($expected) { $expected += 2; };
     $e = new Event('render');
     Dispatcher::instance()->dispatch_event($e);
     fu::not_equal($result, $expected);
 });
 
+fu::test("CoreDispatch::dispatch_event can fire the same event multiple times.", function(){
+    $result = 2;
+    $expected = 0;
+    $handle = function($e) use (&$expected) { $expected += 2; };
+    $e = new Event('render');
+    Dispatcher::instance()->add_listener('render',$handle);
+    Dispatcher::instance()->add_listener('render',$handle);
+    Dispatcher::instance()->dispatch_event($e);
+    fu::equal($result + $result, $expected);
+});
+fu::test("CoreDispatch::dispatch_event you can stop propagation.", function(){
+    $result = 2;
+    $expected = 0;
+    $handle = function($e) use (&$expected) { $expected += 2; };
+    $handle_stop = function($e) use (&$expected) { $expected += 2; $e->stop_propagation = TRUE; };
+    $e = new Event('render');
+    Dispatcher::instance()->add_listener('render',$handle);
+    Dispatcher::instance()->add_listener('render',$handle_stop);
+    Dispatcher::instance()->add_listener('render',$handle);
+    Dispatcher::instance()->add_listener('render',$handle);
+    Dispatcher::instance()->dispatch_event($e, TRUE);
+    fu::equal($result + $result, $expected);
+});
+
+fu::test("CoreDispatch::add_listener requires a listener.", function(){
+    $callback = function(){
+        Dispatcher::instance()->add_listener('render'/*,$handle*/);
+    };
+    fu::throws($callback, 'Exception');
+});
 #############################################
 # RUN IT!
 # $ php -f tests/test_gdispatcher.php 
