@@ -174,6 +174,52 @@ fu::test("CoreDispatch::add_listener requires a listener.", function(){
     };
     fu::throws($callback, 'Exception');
 });
+
+fu::test("CoreDispatch::dispatch_event events should be executed as the order in which were attached.", function(){
+    $result = "";
+    $expected = "THIS IS THE RESULT";    
+    $handle0 = function($e) use (&$result) { $result .= "THIS"; };
+    $handle1 = function($e) use (&$result) { $result .= " IS"; };
+    $handle2 = function($e) use (&$result) { $result .= " THE"; };
+    $handle3 = function($e) use (&$result) { $result .= " RESULT"; };
+    
+    Dispatcher::instance()->add_listener('render',$handle0);
+    Dispatcher::instance()->add_listener('render',$handle1);
+    Dispatcher::instance()->add_listener('render',$handle2);
+    Dispatcher::instance()->add_listener('render',$handle3);
+    
+    $e = new Event('render');
+    Dispatcher::instance()->dispatch_event($e);
+    
+    fu::equal($expected, $result, "We actually got:\n$result");
+});
+
+fu::test("CoreDispatch::dispatch_event events can be attached with priority.", function(){
+    $result = "";
+    $expected = "RESULT THE IS THIS";    
+    $handle0 = function($e) use (&$result) { $result .= " THIS"; };
+    $handle1 = function($e) use (&$result) { $result .= " IS"; };
+    $handle2 = function($e) use (&$result) { $result .= " THE"; };
+    $handle3 = function($e) use (&$result) { $result .= "RESULT"; };
+    
+    Dispatcher::instance()->add_listener('render',$handle0, 0);
+    Dispatcher::instance()->add_listener('render',$handle1, 1);
+    Dispatcher::instance()->add_listener('render',$handle2, 2);
+    Dispatcher::instance()->add_listener('render',$handle3, 3);
+    
+    $e = new Event('render');
+    Dispatcher::instance()->dispatch_event($e);
+    
+    fu::equal($expected, $result, "We actually got:\n$result");
+});
+#############################################
+# CoreListener:
+#
+#############################################
+fu::test("CoreListener::TBD.", function(){
+    // fu::expect_fail('CORELISTENER: TODO');
+});
+
 #############################################
 # RUN IT!
 # $ php -f tests/test_gdispatcher.php 
