@@ -1,5 +1,5 @@
 {
-    "name": "goliatone/events",
+    "name": "goliatone/gdispatcher",
     "description": "The simple flat file PHP [blog] engine.",
     "type": "library",
     "keywords": ["event-dispatcher", "eventdispatcher", "event driven"],
