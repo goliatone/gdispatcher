@@ -1,3 +1,8 @@
+---
+TODO:
+Rewrite, this is legacy!!
+---
+
 # Dispatcher
 
 The dispatcher module enables to have an event driven application flow.
