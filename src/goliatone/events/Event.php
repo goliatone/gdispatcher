@@ -28,6 +28,6 @@ class Event extends CoreEvent
     {
         // print "Event::dispatch\n";
         $dispatcher = $dispatcher == NULL ? Dispatcher::instance() : $dispatcher; 
-        $dispatcher->dispatch_event($this,$allow_stop_propagation);
+        $dispatcher->dispatch_event($this, $allow_stop_propagation);
     }
 }
