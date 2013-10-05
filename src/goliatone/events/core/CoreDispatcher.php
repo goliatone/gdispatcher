@@ -143,12 +143,12 @@ abstract class CoreDispatcher Implements InterfaceDispatcher
     public function once($event, callable $listener)
     {
         $onceListener = function () use (&$onceListener, $event, $listener) {
-            $this->removeListener($event, $onceListener);
+            $this->remove_listener($event, $onceListener);
 
             call_user_func_array($listener, func_get_args());
         };
 
-        $this->on($event, $onceListener);
+        $this->dispatch_event($event, $onceListener);
     }
     
     final function remove_listener($event){
