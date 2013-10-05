@@ -28,19 +28,6 @@
 	   {
             "type": "package",
             "package": {
-                "name": "wolfie/php-markdown",
-                "version": "1.2.2",
-                "autoload": {"classmap": ["markdown.php"]},
-                "source": {
-                    "url": "git://github.com/wolfie/php-markdown.git",
-                    "type": "git",
-                    "reference": "extra"
-                }
-            }
-        },
-	    {
-            "type": "package",
-            "package": {
                 "name": "dotink/sage",
                 "version": "master",
                 "autoload": {"classmap": ["src/"]},
