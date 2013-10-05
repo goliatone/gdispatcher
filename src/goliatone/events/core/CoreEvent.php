@@ -57,7 +57,7 @@ abstract class CoreEvent
         {
             foreach($arguments as $arg => $val)
             {
-                print "Args: {$arg}";
+                // print "Args: {$arg}";
                 $this->set($arg,$val);
                 $this->_arguments[$arg] = $val;
             } 

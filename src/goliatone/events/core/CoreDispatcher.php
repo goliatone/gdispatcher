@@ -110,7 +110,7 @@ abstract class CoreDispatcher Implements InterfaceDispatcher
      */
     final public function dispatch_event( CoreEvent $event, $allow_stop_propagation = FALSE)
     {
-        print "CoreDispatcher::dispatch_event: {$event}\n";
+        // print "CoreDispatcher::dispatch_event: {$event}\n";
         
         if($this->will_trigger($event->type))
         {
@@ -123,7 +123,7 @@ abstract class CoreDispatcher Implements InterfaceDispatcher
                     break;
                 }
             }
-        } else print "CoreDispathcer::dispatch_event will not trigger\n";
+        } //else print "CoreDispathcer::dispatch_event will not trigger\n";
         
         return $event;
     }
@@ -135,5 +135,28 @@ abstract class CoreDispatcher Implements InterfaceDispatcher
     final public function will_trigger($type)
     {
         return isset($this->_listeners[$type]);
+    }
+    
+    /**
+     * TODO: Should we add this to Event?
+     */
+    public function once($event, callable $listener)
+    {
+        $onceListener = function () use (&$onceListener, $event, $listener) {
+            $this->removeListener($event, $onceListener);
+
+            call_user_func_array($listener, func_get_args());
+        };
+
+        $this->on($event, $onceListener);
+    }
+    
+    final function remove_listener($event){
+        
+    }
+    public function remove_all_listeners( CoreEvent $event = null)
+    {
+        if ($event !== null) unset($this->listeners[$event]);
+        else $this->listeners = array();
     }
 }

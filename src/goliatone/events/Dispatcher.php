@@ -46,4 +46,5 @@ class Dispatcher extends CoreDispatcher
     {
         return new Dispatcher();
     }
+    
 }
